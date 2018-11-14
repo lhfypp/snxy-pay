@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @SpringBootApplication
 //@EnableDiscoveryClient
 public class SnxyPayApplication {
@@ -24,5 +27,9 @@ public class SnxyPayApplication {
 	@ConfigurationProperties(prefix = "zhongxin")
 	public ZhongXinServiceInfoConfig getZhongxinServiceInfoConfig(){
 		return  new ZhongXinServiceInfoConfig();
+	}
+	@Bean
+	public ExecutorService getThreadPool(){
+		return Executors.newCachedThreadPool();
 	}
 }
