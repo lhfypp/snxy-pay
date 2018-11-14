@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ZxWxPayServiceFallBack implements ZxWxPayService{
+
+
     @Override
-    public String pay(byte[] data) {
+    public String bankService(byte[] data) {
         return null;
     }
-
 }

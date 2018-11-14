@@ -1,8 +1,15 @@
 package com.snxy.pay.wxpay.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by 24398 on 2018/11/12.
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class WxBillPara {
     private String  appid;  // 不同商户的appid 和mch_id不同
     private String  mch_id;

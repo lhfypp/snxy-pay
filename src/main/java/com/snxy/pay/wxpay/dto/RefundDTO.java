@@ -1,5 +1,6 @@
 package com.snxy.pay.wxpay.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class RefundDTO {
     private String refund_channel;//  ORIGINAL—原路退款 ; BALANCE—退回到余额
     private String refund_fee; // 退款金额

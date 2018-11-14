@@ -35,7 +35,8 @@ public class WxMicroPayService {
     private static final int interval = 10 * 1000;
     private static final int overtime = 30 * 1000;
     //创建一个可重用固定线程数的线程池
-    ExecutorService threadPool = Executors.newCachedThreadPool();
+    @Resource
+    ExecutorService threadPool ;
 
 
     public Map<String,Object> pay(WxPayPara wxPayPara) throws Exception {

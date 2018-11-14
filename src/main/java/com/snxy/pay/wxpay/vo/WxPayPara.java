@@ -7,6 +7,8 @@ import lombok.*;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class WxPayPara {
 
    // private String method;

@@ -1,13 +1,17 @@
 package com.snxy.pay.wxpay.resp;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by 24398 on 2018/11/12.
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class WxRefundResp {
     private String charset;
     private String version;

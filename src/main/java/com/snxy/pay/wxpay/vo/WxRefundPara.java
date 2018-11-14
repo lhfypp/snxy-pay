@@ -1,11 +1,17 @@
 package com.snxy.pay.wxpay.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by 24398 on 2018/11/12.
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class WxRefundPara {
 
   //  private String version;

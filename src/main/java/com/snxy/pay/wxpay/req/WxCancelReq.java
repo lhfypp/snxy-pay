@@ -1,5 +1,6 @@
 package com.snxy.pay.wxpay.req;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
  * Created by 24398 on 2018/11/12.
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class WxCancelReq {
