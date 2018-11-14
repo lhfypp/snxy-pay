@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.util.SortedMap;
+import java.util.Map;
 
 
-public class CorefireHttpPost{
-	public static String connect(String reqUrl,SortedMap<String,String> map) throws Exception {
+public class CoreFireHttpPost {
+	public static String connect(String reqUrl,Map<String,String> map) throws Exception {
 		String res= null; 
 		try {
         	//https单向认证

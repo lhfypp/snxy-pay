@@ -34,7 +34,7 @@ public class XmlUtils {
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String parseRequst(HttpServletRequest request){
+    public static String parseRequest(HttpServletRequest request){
         String body = "";
         try {
             ServletInputStream inputStream = request.getInputStream();
@@ -58,22 +58,22 @@ public class XmlUtils {
         return body;
     }
     
-//    public static String parseXML(SortedMap<String, String> parameters) {
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("<xml>");
-//        Set es = parameters.entrySet();
-//        Iterator it = es.iterator();
-//        while (it.hasNext()) {
-//            Map.Entry entry = (Map.Entry)it.next();
-//            String k = (String)entry.getKey();
-//            String v = (String)entry.getValue();
-//            if (null != v && !"".equals(v) && !"appkey".equals(k)) {
-//                sb.append("<" + k + ">" + parameters.get(k) + "</" + k + ">\n");
-//            }
-//        }
-//        sb.append("</xml>");
-//        return sb.toString();
-//    }
+    public static String parseXML(SortedMap<String, String> parameters) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<xml>");
+        Set es = parameters.entrySet();
+        Iterator it = es.iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry)it.next();
+            String k = (String)entry.getKey();
+            String v = (String)entry.getValue();
+            if (null != v && !"".equals(v) && !"appkey".equals(k)) {
+                sb.append("<" + k + ">" + parameters.get(k) + "</" + k + ">\n");
+            }
+        }
+        sb.append("</xml>");
+        return sb.toString();
+    }
 
     /**
      * 从request中获得参数Map，并返回可读的Map
@@ -170,7 +170,7 @@ public class XmlUtils {
         Map<String,String> vo = __buildXml2map(body);
         return vo;
     }
-
+     
     private static Map<String,String> __buildXml2map(Element body) {
         Map<String,String> vo = new HashMap();
         if (body != null) {
