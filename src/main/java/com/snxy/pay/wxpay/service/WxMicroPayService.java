@@ -3,23 +3,17 @@ package com.snxy.pay.wxpay.service;
 import com.netflix.loadbalancer.InterruptTask;
 import com.snxy.common.exception.BizException;
 import com.snxy.pay.config.*;
-import com.snxy.pay.wxpay.dto.RefundDTO;
-import com.snxy.pay.wxpay.dto.RefundQueryDTO;
+import com.snxy.pay.wxpay.dto.*;
 import com.snxy.pay.wxpay.req.WxPayQueryReq;
 import com.snxy.pay.wxpay.resp.*;
-import com.snxy.pay.wxpay.vo.WxCancelPara;
-import com.snxy.pay.wxpay.vo.WxPayPara;
-import com.snxy.pay.wxpay.vo.WxRefundPara;
-import com.snxy.pay.wxpay.vo.WxRefundQueryPara;
+import com.snxy.pay.wxpay.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by lvhai on 2018/11/9.
@@ -282,8 +276,236 @@ public class WxMicroPayService {
     }
 
 
+    public WxBillDTO bill(WxBillPara wxBillPara) throws Exception {
+        WxBillResp wxBillResp = this.wxMicroPay.bill(wxBillPara);
+        WxBillDTO wxBillDTO = null;
+        if(wxBillResp.getMsg() != null){
+            // 成功
+            String msg = wxBillResp.getMsg();
+            Integer sumStart = msg.indexOf("手续费总金额");
+            String summaryStr = msg.substring(sumStart+6,msg.length());
+            summaryStr.replaceAll("`","");
+            String [] summerArr = summaryStr.split(",");
+            Summary summary = new Summary();
+            for(int i=0;i< summerArr.length;i++){
+                // 总结
+                String content = summerArr[i].trim();
+                summary.setTotal_bill_no(content);
+                summary.setTotal_fee(content);
+                summary.setTotal_refund(content);
+                summary.setTotal_coupon_refund_fee(content);
+                summary.setTotal_service_fee(content);
+            }
+            // 针对不同的bill_type 获取不同的账单
+            // All 所有  SUCCESS 成功支付  REFUND 退款    REVOKED  已撤销 文档没有已撤销
+            String bill_type = wxBillPara.getBill_type();
+            switch (bill_type){
+                case "ALL" :   wxBillDTO = this.getWxBillAll(summary,msg); break;
+                case "SUCCESS": wxBillDTO = this.getWxBillSuccessPay(summary,msg); break;
+                case "REFUND" :  wxBillDTO = this.getWxBillRefund(summary,msg); break;
+                case "REVOKED" : wxBillDTO =  null; break;
+                default:  wxBillDTO = null ; break;
+            }
+        }else{
+           // 查询失败
+            log.error("查询账单失败 ：[{}]",wxBillResp.getReturn_msg());
+            throw new BizException(wxBillResp.getReturn_msg());
+        }
 
 
+        return wxBillDTO;
+    }
 
+
+    public WxBillDTO<WxBillAll> getWxBillAll(Summary summary,String msg){
+        Integer start = msg.indexOf("4");
+        Integer end = msg.indexOf("`总交易单数");
+        String billStr = msg.substring(start+1,end);
+        List<WxBillAll> list = new ArrayList<>();
+        if(billStr.length() > 0) {
+            //有账单内容 去除 ` ``
+            billStr.replaceAll("`|``","");
+            String [] billStrArr = billStr.split(",");
+            for(int i =0;i < billStr.length()/30;i++){
+                WxBillAll wxBillAll = new WxBillAll();
+                for(int j =0;j <30;j++){
+                    Integer index = j + i*30;
+                    String content = billStrArr[index];
+                    wxBillAll.setTradeTime(content);
+                    wxBillAll.setAppid(content);
+                    wxBillAll.setMch_id(content);
+                    wxBillAll.setDevice_info(content);
+                    wxBillAll.setTransaction_id(content);
+                    wxBillAll.setOut_trade_no(content);
+                    wxBillAll.setOpenid(content);
+                    wxBillAll.setTradeType(content);
+                    wxBillAll.setPayBank(content);
+                    wxBillAll.setFee_type(content);
+                    wxBillAll.setTotal_fee(content);
+                    wxBillAll.setCoupon_fee(content);
+                    wxBillAll.setRefund_id(content);
+                    wxBillAll.setOut_refund_no(content);
+                    wxBillAll.setRefund_fee(content);
+                    wxBillAll.setCoupon_refund_fee(content);
+                    wxBillAll.setRefund_type(content);
+                    wxBillAll.setRefund_status(content);
+                    wxBillAll.setGoods_name(content);
+                    wxBillAll.setAttach(content);
+                    wxBillAll.setService_charge(content);
+                    wxBillAll.setRate(content);
+                    wxBillAll.setStore_appid(content);
+                    wxBillAll.setStore_name(content);
+                    wxBillAll.setCashier(content);
+                    wxBillAll.setExtend_para1(content);
+                    wxBillAll.setExtend_para2(content);
+                    wxBillAll.setExtend_para3(content);
+                    wxBillAll.setExtend_para4(content);
+                }
+
+                list.add(wxBillAll);
+            }
+        }
+
+        WxBillDTO<WxBillAll> wxBillDTO = new WxBillDTO<>();
+          wxBillDTO.setWxBills(list);
+          wxBillDTO.setSummary(summary);
+
+        return wxBillDTO;
+    }
+
+    public WxBillDTO<WxBillRefund> getWxBillRefund(Summary summary,String msg) {
+        Integer start = msg.indexOf("4");
+        Integer end = msg.indexOf("`总交易单数");
+        String billStr = msg.substring(start + 1, end);
+        WxBillDTO<WxBillRefund> wxBillDTO = new WxBillDTO<>();
+        List<WxBillRefund> list = new ArrayList<>();
+        if (billStr.length() > 0) {
+            //有账单内容 去除 ` ``
+            billStr.replaceAll("`|``", "");
+            String[] billStrArr = billStr.split(",");
+            for (int i = 0; i < billStr.length() / 31; i++) {
+                WxBillRefund wxBillRefund = new WxBillRefund();
+                for (int j = 0; j < 31; j++) {
+                    Integer index = j + i * 31;
+                    String content = billStrArr[index];
+                    wxBillRefund.setTradeTime(content);
+                    wxBillRefund.setAppid(content);
+                    wxBillRefund.setMch_id(content);
+                    wxBillRefund.setDevice_info(content);
+                    wxBillRefund.setTransaction_id(content);
+                    wxBillRefund.setOut_trade_no(content);
+                    wxBillRefund.setOpenid(content);
+                    wxBillRefund.setTradeType(content);
+                    wxBillRefund.setTradeStatus(content);
+                    wxBillRefund.setPayBank(content);
+                    wxBillRefund.setFee_type(content);
+                    wxBillRefund.setTotal_fee(content);
+                    wxBillRefund.setCoupon_fee(content);
+                    wxBillRefund.setApply_refund_time(content);
+                    wxBillRefund.setRefund_time(content);
+                    wxBillRefund.setRefund_id(content);
+                    wxBillRefund.setOut_refund_no(content);
+                    wxBillRefund.setRefund_fee(content);
+                    wxBillRefund.setCoupon_refund_fee(content);
+                    wxBillRefund.setRefund_type(content);
+                    wxBillRefund.setRefund_status(content);
+                    wxBillRefund.setGoods_name(content);
+                    wxBillRefund.setAttach(content);
+                    wxBillRefund.setService_charge(content);
+                    wxBillRefund.setRate(content);
+                    wxBillRefund.setStore_appid(content);
+                    wxBillRefund.setStore_name(content);
+                    wxBillRefund.setCashier(content);
+                    wxBillRefund.setExtend_para1(content);
+                    wxBillRefund.setExtend_para2(content);
+                    wxBillRefund.setExtend_para3(content);
+                    wxBillRefund.setExtend_para4(content);
+                }
+
+                list.add(wxBillRefund);
+            }
+
+            wxBillDTO.setSummary(summary);
+            wxBillDTO.setWxBills(list);
+
+        }
+
+        return wxBillDTO;
+    }
+
+    public WxBillDTO<WxBillSuccessPay> getWxBillSuccessPay(Summary summary,String msg){
+        Integer start = msg.indexOf("4");
+        Integer end = msg.indexOf("`总交易单数");
+        String billStr = msg.substring(start + 1, end);
+        List<WxBillSuccessPay> list = new ArrayList<>();
+        WxBillDTO<WxBillSuccessPay> wxBillDTO = new WxBillDTO<>();
+        if (billStr.length() > 0) {
+            //有账单内容 去除 ` ``
+            billStr.replaceAll("`|``", "");
+            String[] billStrArr = billStr.split(",");
+            for (int i = 0; i < billStr.length() / 24; i++) {
+                WxBillSuccessPay wxBillSuccessPay = new WxBillSuccessPay();
+                for (int j = 0; j < 24; j++) {
+                    Integer index = j + i * 24;
+                    String content = billStrArr[index];
+                    wxBillSuccessPay.setTradeTime(content);
+                    wxBillSuccessPay.setAppid(content);
+                    wxBillSuccessPay.setMch_id(content);
+                    wxBillSuccessPay.setDevice_info(content);
+                    wxBillSuccessPay.setTransaction_id(content);
+                    wxBillSuccessPay.setOut_trade_no(content);
+                    wxBillSuccessPay.setOpenid(content);
+                    wxBillSuccessPay.setTradeType(content);
+                    wxBillSuccessPay.setTradeStatus(content);
+                    wxBillSuccessPay.setPayBank(content);
+                    wxBillSuccessPay.setFee_type(content);
+                    wxBillSuccessPay.setTotal_fee(content);
+                    wxBillSuccessPay.setCoupon_fee(content);
+               /*     wxBillRefund.setApply_refund_time(content);
+                    wxBillRefund.setRefund_time(content);
+                    wxBillRefund.setRefund_id(content);
+                    wxBillRefund.setOut_refund_no(content);
+                    wxBillRefund.setRefund_fee(content);
+                    wxBillRefund.setCoupon_refund_fee(content);
+                    wxBillRefund.setRefund_type(content);
+                    wxBillRefund.setRefund_status(content);*/
+                    wxBillSuccessPay.setGoods_name(content);
+                    wxBillSuccessPay.setAttach(content);
+                    wxBillSuccessPay.setService_charge(content);
+                    wxBillSuccessPay.setRate(content);
+                    wxBillSuccessPay.setStore_appid(content);
+                    wxBillSuccessPay.setStore_name(content);
+                    wxBillSuccessPay.setCashier(content);
+                    wxBillSuccessPay.setExtend_para1(content);
+                    wxBillSuccessPay.setExtend_para2(content);
+                    wxBillSuccessPay.setExtend_para3(content);
+                    wxBillSuccessPay.setExtend_para4(content);
+                }
+
+                list.add(wxBillSuccessPay);
+            }
+
+            wxBillDTO.setSummary(summary);
+            wxBillDTO.setWxBills(list);
+
+        }
+
+        return wxBillDTO;
+
+    }
+
+
+    public static void main(String[] args) {
+        String str = "2";
+        String result = null;
+        switch (str){
+            case "1" : result = str ;break;
+            case "2" : result = str + "000";break;
+            case "3" : result = str +"1111";break;
+            default:   result = "000";break;
+        }
+
+        log.info("result : [{}]",result);
+    }
 
 }

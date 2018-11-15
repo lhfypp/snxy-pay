@@ -15,7 +15,7 @@ public class WxPayPara {
    // private String version;
     private String  appid;  // 不同商户的appid 和mch_id不同
     private String  mch_id;
-    private String  nonce_str;
+  //  private String  nonce_str;
   //  private String sign;
 
     private String  body;// 商品描述

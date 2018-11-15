@@ -45,12 +45,13 @@ public class WxMicroPay {
 
         // 将对象属性封装在HashMap中
         // apach BeanUtils 把对象封装成Map时会对一个key为class，value值为对象类型的键值对，注意去掉
-        WxPayReq wxPayReq = new WxPayReq();
-          BeanUtils.copyProperties(wxPayPara,wxPayPara);
-          wxPayReq.setMethod(WXMethodNameConst.WX_MICROPAY);
-          wxPayReq.setVersion(zxc.getVersion());
+        Map<String,String> map =  BeanUtils.describe(wxPayPara);
+        map.remove("class");
+        map.put("method",WXMethodNameConst.WX_MICROPAY);
+        map.put("version",zxc.getVersion());
+        map.put("nonce_str",UUIDUtil.getUUID());
         // 请求bytes
-        byte[] reqByte = this.getReqByte(wxPayReq);
+        byte[] reqByte = this.getReqByte(map);
         String payResult = zxWxPayService.bankService(reqByte);
         // 将返回的字符串解析成对象
         WxPayResp wxPayResp = this.parse2Bean(payResult,WxPayResp.class);
@@ -60,10 +61,10 @@ public class WxMicroPay {
     }
 
 
-    public  <R> byte[] getReqByte(R r) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Map<String,String> map = BeanUtils.describe(r);
+    public   byte[] getReqByte(Map<String,String> map) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+     /*   Map<String,String> map = BeanUtils.describe(r);
         map.remove("class");
-        log.info("map : [{}]",map);
+        log.info("map : [{}]",map);*/
         // 去掉Map中参数，然后进行sign
         Map<String, String> filterParaMap = SignUtils.paraFilter(map);
         StringBuilder sb = new StringBuilder();
@@ -79,7 +80,7 @@ public class WxMicroPay {
 
     public <T> T  parse2Bean(String resultStr,Class<T> targetObj) throws Exception{
         T bean = null;
-        if(resultStr != null){
+        if(resultStr != null && resultStr.startsWith("<xml")){
             Map<String,String> resultMap = XmlUtils.xml2map(resultStr, "xml");
             log.info("resultMap : [{}]",resultMap);
              bean = targetObj.newInstance();
@@ -109,11 +110,13 @@ public class WxMicroPay {
      */
     public WxPayQueryResp query(WxPayQueryReq wxPayQueryReq) throws Exception{
         // 设置参数
-        wxPayQueryReq.setMethod(WXMethodNameConst.WX_QUERY);
-        wxPayQueryReq.setNonce_str(UUIDUtil.getUUID());
-        wxPayQueryReq.setVersion(zxc.getVersion());
+        Map<String,String> map =  BeanUtils.describe(wxPayQueryReq);
+            map.remove("class");
+            map.put("method",WXMethodNameConst.WX_QUERY);
+            map.put("version",zxc.getVersion());
+            map.put("nonce_str",UUIDUtil.getUUID());
         //获取请求的字节数组
-        byte[] bytes = this.getReqByte(wxPayQueryReq);
+        byte[] bytes = this.getReqByte(map);
         String payQueryResult = this.zxWxPayService.bankService(bytes);
         WxPayQueryResp wxPayQueryResp = this.parse2Bean(payQueryResult,WxPayQueryResp.class);
         return wxPayQueryResp;
@@ -126,12 +129,13 @@ public class WxMicroPay {
      * @throws Exception
      */
     public WxRefundResp refund(WxRefundPara wxRefundPara) throws Exception{
-        WxReFundReq wxReFundReq = new WxReFundReq();
-           BeanUtils.copyProperties(wxReFundReq,wxRefundPara);
-           wxReFundReq.setMethod(WXMethodNameConst.WX_REFUND);
-           wxReFundReq.setVersion(zxc.getVersion());
+        Map<String,String> map =  BeanUtils.describe(wxRefundPara);
+            map.remove("class");
+            map.put("method",WXMethodNameConst.WX_REFUND);
+            map.put("version",zxc.getVersion());
+            map.put("nonce_str",UUIDUtil.getUUID());
          // 获取请求字节数组
-        byte[] bytes = this.getReqByte(wxReFundReq);
+        byte[] bytes = this.getReqByte(map);
         String refundResult = this.zxWxPayService.bankService(bytes);
         WxRefundResp wxRefundResp = this.parse2Bean(refundResult,WxRefundResp.class);
         return wxRefundResp;
@@ -143,13 +147,14 @@ public class WxMicroPay {
      * @return
      */
     public WxRefundQueryResp refundQuery(WxRefundQueryPara wxRefundQueryPara) throws Exception{
-        WxRefundQueryReq wxRefundQueryReq = new WxRefundQueryReq();
-            BeanUtils.copyProperties(wxRefundQueryReq,wxRefundQueryPara);
-            wxRefundQueryReq.setMethod(WXMethodNameConst.WX_REFUNDQUERY);
-            wxRefundQueryReq.setVersion(zxc.getVersion());
-            wxRefundQueryReq.setNonce_str(UUIDUtil.getUUID());
+        // 设置参数
+        Map<String,String> map =  BeanUtils.describe(wxRefundQueryPara);
+            map.remove("class");
+            map.put("method",WXMethodNameConst.WX_REFUNDQUERY);
+            map.put("version",zxc.getVersion());
+            map.put("nonce_str",UUIDUtil.getUUID());
         // 获取请求字节数组
-        byte[] bytes = this.getReqByte(wxRefundQueryReq);
+        byte[] bytes = this.getReqByte(map);
         String refundQueryResult = this.zxWxPayService.bankService(bytes);
         WxRefundQueryResp wxRefundQueryResp = this.parse2Bean(refundQueryResult,WxRefundQueryResp.class);
         return wxRefundQueryResp;
@@ -157,16 +162,36 @@ public class WxMicroPay {
 
 
     public WxCancelResp cancel(WxCancelPara wxCancelPara) throws Exception{
-        WxCancelReq wxCancelReq = new WxCancelReq();
-           BeanUtils.copyProperties(wxCancelReq,wxCancelPara);
-           wxCancelReq.setMethod(WXMethodNameConst.WX_REFUNDQUERY);
-           wxCancelReq.setVersion(zxc.getVersion());
-           wxCancelReq.setNonce_str(UUIDUtil.getUUID());
+        // 设置参数
+        Map<String,String> map = BeanUtils.describe(wxCancelPara);
+        map.remove("class");
+        map.put("method",WXMethodNameConst.WX_REFUNDQUERY);
+        map.put("version",zxc.getVersion());
+        map.put("nonce_str",UUIDUtil.getUUID());
+        log.info("map : [{}]",map);
+
          // 获取请求字节数组
-        byte[] bytes = this.getReqByte(wxCancelPara);
+        byte[] bytes = this.getReqByte(map);
         String cancelResult = this.zxWxPayService.bankService(bytes);
         WxCancelResp wxCancelResp = this.parse2Bean(cancelResult,WxCancelResp.class);
         return wxCancelResp;
     }
 
+    public WxBillResp bill(WxBillPara wxBillPara) throws Exception {
+        Map<String,String> map =  BeanUtils.describe(wxBillPara);
+           map.remove("class");
+           map.put("method",WXMethodNameConst.WX_BILL);
+           map.put("version",zxc.getVersion());
+           map.put("nonce_str",UUIDUtil.getUUID());
+
+        // 获取请求字节数组
+        byte[] bytes = this.getReqByte(map);
+        String billResult = this.zxWxPayService.bankService(bytes);
+        WxBillResp wxBillResp = this.parse2Bean(billResult,WxBillResp.class);
+        if(wxBillResp == null){
+            wxBillResp =  new WxBillResp();
+        }
+            wxBillResp.setMsg(billResult);
+        return wxBillResp;
+    }
 }

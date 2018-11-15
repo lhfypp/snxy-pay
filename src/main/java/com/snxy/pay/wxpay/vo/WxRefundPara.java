@@ -18,7 +18,7 @@ public class WxRefundPara {
   //  private String method;
     private String appid;
     private String mch_id;
-    private String nonce_str;
+ //   private String nonce_str;
   //  private String sign;
 
     private String out_trade_no; // 商户订单号

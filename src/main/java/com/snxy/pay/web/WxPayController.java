@@ -3,11 +3,9 @@ package com.snxy.pay.web;
 import com.snxy.common.response.ResultData;
 import com.snxy.pay.wxpay.dto.RefundDTO;
 import com.snxy.pay.wxpay.dto.RefundQueryDTO;
+import com.snxy.pay.wxpay.dto.WxBillDTO;
 import com.snxy.pay.wxpay.service.WxMicroPayService;
-import com.snxy.pay.wxpay.vo.WxCancelPara;
-import com.snxy.pay.wxpay.vo.WxPayPara;
-import com.snxy.pay.wxpay.vo.WxRefundPara;
-import com.snxy.pay.wxpay.vo.WxRefundQueryPara;
+import com.snxy.pay.wxpay.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,5 +81,16 @@ public class WxPayController {
         return ResultData.success(null);
     }
 
+    /***
+     * 查询账单
+     * @param wxBillPara
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/bill")
+    public ResultData  wxBill(WxBillPara wxBillPara) throws Exception{
+        WxBillDTO wxBillDTO = this.wxMicroPayService.bill(wxBillPara);
+        return ResultData.success(wxBillDTO);
+    }
 
 }
