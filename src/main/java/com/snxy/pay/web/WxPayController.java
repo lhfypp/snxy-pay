@@ -1,18 +1,17 @@
 package com.snxy.pay.web;
 
 import com.snxy.common.response.ResultData;
-import com.snxy.pay.wxpay.dto.RefundDTO;
-import com.snxy.pay.wxpay.dto.RefundQueryDTO;
-import com.snxy.pay.wxpay.dto.WxBillDTO;
-import com.snxy.pay.wxpay.service.WxMicroPayService;
-import com.snxy.pay.wxpay.vo.*;
+import com.snxy.pay.service.dto.RefundDTO;
+import com.snxy.pay.service.dto.WxBillDTO;
+import com.snxy.pay.service.resp.WxCancelResp;
+import com.snxy.pay.service.resp.WxRefundQueryResp;
+import com.snxy.pay.service.WxMicroPayDecorator;
+import com.snxy.pay.service.vo.wx.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,11 +20,11 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-@RequestMapping("/pay/wx")
+@RequestMapping("/wx")
 public class WxPayController {
 
     @Resource
-    private WxMicroPayService wxMicroPayService;
+    private WxMicroPayDecorator wxMicroPayDecorator;
 
     /***
      * 微信支付
@@ -36,7 +35,7 @@ public class WxPayController {
     @RequestMapping("/pay")
     public ResultData wxPay(WxPayPara wxPayPara) throws Exception{
         // 参数校验
-        Map<String, Object> map = wxMicroPayService.pay(wxPayPara);
+        Map<String, Object> map = this.wxMicroPayDecorator.pay(wxPayPara);
         if((Integer)map.get("code") == 1){
             return ResultData.fail((String) map.get("msg"));
         }
@@ -51,7 +50,7 @@ public class WxPayController {
      */
     @RequestMapping("/refund")
     public ResultData wxRefund(WxRefundPara wxRefundPara) throws Exception{
-        RefundDTO refundDTO = this.wxMicroPayService.refund(wxRefundPara);
+        RefundDTO refundDTO = this.wxMicroPayDecorator.refund(wxRefundPara);
         return ResultData.success(refundDTO);
     }
 
@@ -64,9 +63,9 @@ public class WxPayController {
     @RequestMapping("/refund/query")
     public ResultData wxRefundQuery(WxRefundQueryPara wxRefundQueryPara) throws Exception{
 
-        RefundQueryDTO refundQueryDTO = this.wxMicroPayService.refundQuery(wxRefundQueryPara);
+        WxRefundQueryResp refundQueryResp = this.wxMicroPayDecorator.refundQuery(wxRefundQueryPara);
 
-        return ResultData.success(refundQueryDTO);
+        return ResultData.success(refundQueryResp);
     }
 
     /**
@@ -77,8 +76,9 @@ public class WxPayController {
      */
     @RequestMapping("/cancel")
     public ResultData wxCancel(WxCancelPara wxCancelPara) throws Exception{
-        this.wxMicroPayService.cancel(wxCancelPara);
-        return ResultData.success(null);
+        log.info("wxCancelPara : [{}]",wxCancelPara);
+        WxCancelResp wxCancelResp = this.wxMicroPayDecorator.cancel(wxCancelPara);
+        return ResultData.success(wxCancelResp);
     }
 
     /***
@@ -89,7 +89,7 @@ public class WxPayController {
      */
     @RequestMapping("/bill")
     public ResultData  wxBill(WxBillPara wxBillPara) throws Exception{
-        WxBillDTO wxBillDTO = this.wxMicroPayService.bill(wxBillPara);
+        WxBillDTO wxBillDTO = this.wxMicroPayDecorator.bill(wxBillPara);
         return ResultData.success(wxBillDTO);
     }
 

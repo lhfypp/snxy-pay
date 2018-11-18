@@ -1,16 +1,23 @@
 package com.snxy.pay.util;
 
+import com.alibaba.fastjson.JSON;
+import com.snxy.common.exception.BizException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
  * Created by lvhai on 2018/11/9.
  */
+@Slf4j
 public class CommonUtils {
     private static final Logger LOG = LoggerFactory.getLogger(CommonUtils.class);
 
@@ -45,4 +52,43 @@ public class CommonUtils {
         });
         return map;
     }
+
+    public  static   byte[] getReqByte(Map<String,String> map,String key) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        // 去掉Map中参数，然后进行sign
+        Map<String, String> filterParaMap = SignUtils.paraFilter(map);
+        StringBuilder sb = new StringBuilder();
+        SignUtils.buildPayParams(sb,filterParaMap,false);
+        String sign = MD5.sign(sb.toString(),"&key=" + key,"utf-8").toUpperCase();
+        map.put("sign",sign);
+        log.info("afterSignMap  : [{}]",map);
+        // 请求字符串
+        String reqStr = XmlUtils.parseXML(map);
+        return reqStr.getBytes();
+    }
+
+
+
+    public static  <T> T  parse2Bean(String resultStr,Class<T> targetObj) throws Exception{
+        T bean = null;
+        if(resultStr != null && resultStr.startsWith("<xml")){
+            Map<String,String> resultMap = XmlUtils.xml2map(resultStr, "xml");
+            log.info("resultMap : [{}]",resultMap);
+            bean = targetObj.newInstance();
+            bean = map2Bean(resultMap,targetObj);
+            if(bean != null){
+                log.info("wxPayResp JSON  :  [{}]", JSON.toJSONString(bean));
+            }else{
+                throw new BizException("map 转bean 出错");
+            }
+        }
+        return bean;
+    }
+
+    public  static  <T> T map2Bean(Map<String, String> map, Class<T> targetObj)throws Exception {
+        T bean =  targetObj.newInstance();
+        BeanUtils.populate(bean, map);
+        return bean;
+    }
+
+
 }
