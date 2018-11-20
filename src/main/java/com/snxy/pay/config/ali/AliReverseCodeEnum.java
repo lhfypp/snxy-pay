@@ -1,5 +1,7 @@
 package com.snxy.pay.config.ali;
 
+import com.snxy.common.util.StringUtil;
+
 public enum AliReverseCodeEnum {
 
     AQC_SYSTEM_ERROR("AQC_SYSTEM_ERROR","系统错误,请使用相同的参数再次调用"),
@@ -44,6 +46,9 @@ public enum AliReverseCodeEnum {
     }
 
     public String getReturnMsg() {
+        if(this.returnMsg == null){
+            return this.msg;
+        }
         return returnMsg;
     }
 

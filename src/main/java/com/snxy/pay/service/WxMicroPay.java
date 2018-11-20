@@ -193,4 +193,21 @@ public class WxMicroPay {
             wxBillResp.setMsg(billResult);
         return wxBillResp;
     }
+
+    public WxPayQueryResp payQuery(WxPayQueryPara wxPayQueryPara) throws Exception{
+        // 设置参数
+        Map<String,String> map = BeanUtils.describe(wxPayQueryPara);
+        map.remove("class");
+        map.put("method",WXMethodNameConst.WX_QUERY);
+        map.put("version",zxc.getVersion());
+        map.put("nonce_str",UUIDUtil.getUUID());
+        log.info("map : [{}]",map);
+
+        // 获取请求字节数组
+        byte[] bytes = this.getReqByte(map);
+        String payQueryResult = this.zxPayService.bankService(bytes);
+        WxPayQueryResp wxPayQueryResp = this.parse2Bean(payQueryResult,WxPayQueryResp.class);
+
+        return wxPayQueryResp;
+    }
 }

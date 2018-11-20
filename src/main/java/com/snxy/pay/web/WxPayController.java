@@ -4,6 +4,7 @@ import com.snxy.common.response.ResultData;
 import com.snxy.pay.service.dto.RefundDTO;
 import com.snxy.pay.service.dto.WxBillDTO;
 import com.snxy.pay.service.resp.WxCancelResp;
+import com.snxy.pay.service.resp.WxPayQueryResp;
 import com.snxy.pay.service.resp.WxRefundQueryResp;
 import com.snxy.pay.service.WxMicroPayDecorator;
 import com.snxy.pay.service.vo.wx.*;
@@ -40,6 +41,21 @@ public class WxPayController {
             return ResultData.fail((String) map.get("msg"));
         }
         return ResultData.success((Integer) map.get("code"),(String) map.get("msg"),null);
+    }
+
+    /***
+     * 查询订单支付情况
+     * @param wxPayQueryPara
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/query")
+    public ResultData wxPayQuery(WxPayQueryPara wxPayQueryPara) throws Exception{
+        Map<String,Object> map = this.wxMicroPayDecorator.payQuery(wxPayQueryPara);
+        Integer code = (Integer) map.get("code");
+        String successMsg = (String) map.get("msg");
+        WxPayQueryResp wxPayQueryResp = (WxPayQueryResp) map.get("obj");
+        return ResultData.success(code,successMsg,wxPayQueryResp);
     }
 
     /***

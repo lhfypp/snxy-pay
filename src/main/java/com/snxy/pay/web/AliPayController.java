@@ -28,11 +28,12 @@ public class AliPayController {
      * @return
      */
     @RequestMapping("/pay")
-    public ResultData pay(AliPayPara aliPayPara) throws Exception{
-        Map<String, Object> map = this.aliMicropayDecorator.pay(aliPayPara);
+    public ResultData pay(AliPayPara aliPayPara,Integer businessType ) throws Exception{
+        Map<String, Object> map = this.aliMicropayDecorator.pay(aliPayPara,businessType);
         Integer code = (Integer) map.get("code");
+        String successMsg = (String) map.get("successMsg");
         AliPayResp aliPayResp = (AliPayResp) map.get("aliPayResp");
-        return ResultData.success(code,null,aliPayResp);
+        return ResultData.success(code,successMsg,aliPayResp);
     }
 
     /***
@@ -43,8 +44,11 @@ public class AliPayController {
      */
     @RequestMapping("/pay/query")
     public ResultData payQuery(AliPayQueryPara aliPayQueryPara) throws Exception{
-        AliPayQueryResp aliPayQueryResp = this.aliMicropayDecorator.payQuery(aliPayQueryPara);
-        return ResultData.success(aliPayQueryResp);
+        Map<String,Object> map = this.aliMicropayDecorator.payQuery(aliPayQueryPara);
+        Integer code = (Integer) map.get("code");
+        String successMsg = (String) map.get("successMsg");
+        AliPayQueryResp aliPayQueryResp = (AliPayQueryResp) map.get("obj");
+        return ResultData.success(code,successMsg,aliPayQueryResp);
     }
 
     /***
@@ -53,8 +57,8 @@ public class AliPayController {
      * @return
      */
     @RequestMapping("/refund")
-    public ResultData refund(AliRefundPara aliRefundPara ) throws Exception{
-        AliRefundResp aliRefundResp = this.aliMicropayDecorator.refund(aliRefundPara);
+    public ResultData refund(AliRefundPara aliRefundPara,Integer businessType ) throws Exception{
+        AliRefundResp aliRefundResp = this.aliMicropayDecorator.refund(aliRefundPara,businessType);
         return ResultData.success(aliRefundResp);
     }
 
@@ -65,8 +69,11 @@ public class AliPayController {
      */
     @RequestMapping("/refund/query")
     public ResultData refundQuery(AliRefundQueryPara aliRefundQueryPara) throws Exception{
-        AliRefundQueryResp aliRefundQueryResp = this.aliMicropayDecorator.refundQuery(aliRefundQueryPara);
-        return ResultData.success(aliRefundQueryResp);
+        Map<String,Object> map = this.aliMicropayDecorator.refundQuery(aliRefundQueryPara);
+        Integer code = (Integer) map.get("code");
+        String successMsg = (String) map.get("successMsg");
+        AliRefundQueryResp aliRefundQueryResp = (AliRefundQueryResp) map.get("obj");
+        return ResultData.success(code,successMsg,aliRefundQueryResp);
     }
 
     /***

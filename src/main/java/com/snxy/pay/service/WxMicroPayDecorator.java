@@ -124,7 +124,7 @@ public class WxMicroPayDecorator {
                     log.debug("查询交易状态 trade_state:[{}]", tradeState);
                     String errCode = wxPayQueryResp.getErr_code();
                     log.debug("查询交易 errCode : [{}]",errCode);
-                    if ((WxTradeStatusEnum.SUCCESS.getCode().equalsIgnoreCase(tradeState))) {
+                    if ((WxTradeStatusEnum.SUCCESS.getStatus().equalsIgnoreCase(tradeState))) {
                         // 查询到支付成功跳出
                         log.debug("其它交易状态跳出:[{}]", tradeState);
                         paySuccess = true;
@@ -483,4 +483,40 @@ public class WxMicroPayDecorator {
         log.info("result : [{}]",result);
     }
 
+    public Map<String,Object> payQuery(WxPayQueryPara wxPayQueryPara) throws Exception {
+        WxPayQueryResp wxPayQueryResp = this.wxMicroPay.payQuery(wxPayQueryPara);
+        if(wxPayQueryResp == null ){
+            // 服务降级和通讯失败
+            log.error("商户单号 ： [{}] 查询订单支付情况失败 : [{}]",wxPayQueryPara.getOut_trade_no(),"服务降级");
+            throw new BizException("取消订单失败,请重试");
+        }
+        if("FAIL".equals( wxPayQueryResp.getReturn_code())){
+            log.error("商户单号 ：[{}] 查询订单支付情况失败 ： [{}]",wxPayQueryPara.getOut_trade_no(),wxPayQueryResp.getReturn_msg());
+            throw new BizException(wxPayQueryResp.getReturn_msg());
+        }
+
+        if(!"SUCCESS".equals(wxPayQueryResp.getResult_code())){
+            log.error("商户单号 ： [{}] 查询订单支付情况失败 : [{}]",wxPayQueryPara.getOut_trade_no(),wxPayQueryResp.getErr_code_des());
+            throw new BizException(wxPayQueryResp.getErr_code_des());
+        }
+
+        // result_code     return_code 均为SUCCESS
+      /*  SUCCESS--支付成功   0
+         REFUND--转入退款   1001
+         NOTPAY--未支付     1002
+         CLOSED--已关闭     1003
+         REVOKED--已撤销（刷卡支付）1004
+         USERPAYING--用户支付中   1005
+         NOPAY--未支付(确认支付超时)  1006
+         PAYERROR--支付失败(其他原因，如银 行返回失败) 1007   */
+
+        String trade_state = wxPayQueryResp.getTrade_state();
+        WxTradeStatusEnum wxTradeStatusEnum = WxTradeStatusEnum.getByStatus(trade_state);
+        Map<String,Object> map = new HashMap<>();
+          map.put("code",wxTradeStatusEnum.getCode());
+          map.put("msg",wxTradeStatusEnum.getMsg());
+          map.put("obj",wxPayQueryResp);
+
+        return map;
+    }
 }

@@ -32,6 +32,7 @@ public class AliRefundResp {
     private String out_refund_no;
     private String pass_refund_no;
     private String fund_change;
+    private String refund_fee;
     private String gmt_refund_pay;
     private String refund_detail_item_list;
 

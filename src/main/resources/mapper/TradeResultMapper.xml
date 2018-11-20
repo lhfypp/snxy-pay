@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.snxy.pay.dao.mapper.TradeResultMapper">
+  <resultMap id="BaseResultMap" type="com.snxy.pay.domain.TradeResult">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="business_type_id" jdbcType="BIGINT" property="businessTypeId" />
+    <result column="business_type_desc" jdbcType="VARCHAR" property="businessTypeDesc" />
+    <result column="channel" jdbcType="INTEGER" property="channel" />
+    <result column="wx_appid" jdbcType="VARCHAR" property="wxAppid" />
+    <result column="return_code" jdbcType="VARCHAR" property="returnCode" />
+    <result column="return_msg" jdbcType="VARCHAR" property="returnMsg" />
+    <result column="result_code" jdbcType="VARCHAR" property="resultCode" />
+    <result column="err_code" jdbcType="VARCHAR" property="errCode" />
+    <result column="err_code_des" jdbcType="VARCHAR" property="errCodeDes" />
+    <result column="trade_time" jdbcType="VARCHAR" property="tradeTime" />
+    <result column="appid" jdbcType="VARCHAR" property="appid" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
+    <result column="device_info" jdbcType="VARCHAR" property="deviceInfo" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
+    <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="trade_method" jdbcType="VARCHAR" property="tradeMethod" />
+    <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+    <result column="bank_type" jdbcType="VARCHAR" property="bankType" />
+    <result column="fee_type" jdbcType="VARCHAR" property="feeType" />
+    <result column="total_fee" jdbcType="VARCHAR" property="totalFee" />
+    <result column="coupon_fee" jdbcType="VARCHAR" property="couponFee" />
+    <result column="refund_id" jdbcType="VARCHAR" property="refundId" />
+    <result column="pass_refund_no" jdbcType="VARCHAR" property="passRefundNo" />
+    <result column="out_refund_no" jdbcType="VARCHAR" property="outRefundNo" />
+    <result column="recall" jdbcType="VARCHAR" property="recall" />
+    <result column="refund_fee" jdbcType="VARCHAR" property="refundFee" />
+    <result column="coupon_refund_fee" jdbcType="VARCHAR" property="couponRefundFee" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="service_charge" jdbcType="VARCHAR" property="serviceCharge" />
+    <result column="rate" jdbcType="VARCHAR" property="rate" />
+    <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="extend1" jdbcType="VARCHAR" property="extend1" />
+    <result column="extend2" jdbcType="VARCHAR" property="extend2" />
+    <result column="extend3" jdbcType="VARCHAR" property="extend3" />
+    <result column="extend4" jdbcType="VARCHAR" property="extend4" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, business_type_id, business_type_desc, channel, wx_appid, return_code, return_msg, 
+    result_code, err_code, err_code_des, trade_time, appid, mch_id, device_info, transaction_id, 
+    out_trade_no, openid, trade_method, trade_type, bank_type, fee_type, total_fee, coupon_fee, 
+    refund_id, pass_refund_no, out_refund_no, recall, refund_fee, coupon_refund_fee, 
+    body, detail, service_charge, rate, store_id, store_name, operator, extend1, extend2, 
+    extend3, extend4, remark, gmt_create, gmt_modified, is_delete
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from trade_result
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from trade_result
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.snxy.pay.domain.TradeResult">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trade_result (business_type_id, business_type_desc, 
+      channel, wx_appid, return_code, 
+      return_msg, result_code, err_code, 
+      err_code_des, trade_time, appid, 
+      mch_id, device_info, transaction_id, 
+      out_trade_no, openid, trade_method, 
+      trade_type, bank_type, fee_type, 
+      total_fee, coupon_fee, refund_id, 
+      pass_refund_no, out_refund_no, recall, 
+      refund_fee, coupon_refund_fee, body, 
+      detail, service_charge, rate, 
+      store_id, store_name, operator, 
+      extend1, extend2, extend3, 
+      extend4, remark, gmt_create, 
+      gmt_modified, is_delete)
+    values (#{businessTypeId,jdbcType=BIGINT}, #{businessTypeDesc,jdbcType=VARCHAR}, 
+      #{channel,jdbcType=INTEGER}, #{wxAppid,jdbcType=VARCHAR}, #{returnCode,jdbcType=VARCHAR}, 
+      #{returnMsg,jdbcType=VARCHAR}, #{resultCode,jdbcType=VARCHAR}, #{errCode,jdbcType=VARCHAR}, 
+      #{errCodeDes,jdbcType=VARCHAR}, #{tradeTime,jdbcType=VARCHAR}, #{appid,jdbcType=VARCHAR}, 
+      #{mchId,jdbcType=VARCHAR}, #{deviceInfo,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR}, 
+      #{outTradeNo,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{tradeMethod,jdbcType=VARCHAR}, 
+      #{tradeType,jdbcType=VARCHAR}, #{bankType,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, 
+      #{totalFee,jdbcType=VARCHAR}, #{couponFee,jdbcType=VARCHAR}, #{refundId,jdbcType=VARCHAR}, 
+      #{passRefundNo,jdbcType=VARCHAR}, #{outRefundNo,jdbcType=VARCHAR}, #{recall,jdbcType=VARCHAR}, 
+      #{refundFee,jdbcType=VARCHAR}, #{couponRefundFee,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, 
+      #{detail,jdbcType=VARCHAR}, #{serviceCharge,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR}, 
+      #{storeId,jdbcType=VARCHAR}, #{storeName,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, 
+      #{extend4,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.snxy.pay.domain.TradeResult">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trade_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="businessTypeId != null">
+        business_type_id,
+      </if>
+      <if test="businessTypeDesc != null">
+        business_type_desc,
+      </if>
+      <if test="channel != null">
+        channel,
+      </if>
+      <if test="wxAppid != null">
+        wx_appid,
+      </if>
+      <if test="returnCode != null">
+        return_code,
+      </if>
+      <if test="returnMsg != null">
+        return_msg,
+      </if>
+      <if test="resultCode != null">
+        result_code,
+      </if>
+      <if test="errCode != null">
+        err_code,
+      </if>
+      <if test="errCodeDes != null">
+        err_code_des,
+      </if>
+      <if test="tradeTime != null">
+        trade_time,
+      </if>
+      <if test="appid != null">
+        appid,
+      </if>
+      <if test="mchId != null">
+        mch_id,
+      </if>
+      <if test="deviceInfo != null">
+        device_info,
+      </if>
+      <if test="transactionId != null">
+        transaction_id,
+      </if>
+      <if test="outTradeNo != null">
+        out_trade_no,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="tradeMethod != null">
+        trade_method,
+      </if>
+      <if test="tradeType != null">
+        trade_type,
+      </if>
+      <if test="bankType != null">
+        bank_type,
+      </if>
+      <if test="feeType != null">
+        fee_type,
+      </if>
+      <if test="totalFee != null">
+        total_fee,
+      </if>
+      <if test="couponFee != null">
+        coupon_fee,
+      </if>
+      <if test="refundId != null">
+        refund_id,
+      </if>
+      <if test="passRefundNo != null">
+        pass_refund_no,
+      </if>
+      <if test="outRefundNo != null">
+        out_refund_no,
+      </if>
+      <if test="recall != null">
+        recall,
+      </if>
+      <if test="refundFee != null">
+        refund_fee,
+      </if>
+      <if test="couponRefundFee != null">
+        coupon_refund_fee,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+      <if test="serviceCharge != null">
+        service_charge,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+      <if test="storeId != null">
+        store_id,
+      </if>
+      <if test="storeName != null">
+        store_name,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="extend1 != null">
+        extend1,
+      </if>
+      <if test="extend2 != null">
+        extend2,
+      </if>
+      <if test="extend3 != null">
+        extend3,
+      </if>
+      <if test="extend4 != null">
+        extend4,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="businessTypeId != null">
+        #{businessTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="businessTypeDesc != null">
+        #{businessTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null">
+        #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="wxAppid != null">
+        #{wxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCode != null">
+        #{returnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnMsg != null">
+        #{returnMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="resultCode != null">
+        #{resultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errCode != null">
+        #{errCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errCodeDes != null">
+        #{errCodeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null">
+        #{tradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null">
+        #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null">
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceInfo != null">
+        #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="outTradeNo != null">
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeMethod != null">
+        #{tradeMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null">
+        #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankType != null">
+        #{bankType,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null">
+        #{totalFee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponFee != null">
+        #{couponFee,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null">
+        #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="passRefundNo != null">
+        #{passRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outRefundNo != null">
+        #{outRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="recall != null">
+        #{recall,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFee != null">
+        #{refundFee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponRefundFee != null">
+        #{couponRefundFee,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCharge != null">
+        #{serviceCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null">
+        #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null">
+        #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null">
+        #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null">
+        #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null">
+        #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.snxy.pay.domain.TradeResult">
+    update trade_result
+    <set>
+      <if test="businessTypeId != null">
+        business_type_id = #{businessTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="businessTypeDesc != null">
+        business_type_desc = #{businessTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null">
+        channel = #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="wxAppid != null">
+        wx_appid = #{wxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCode != null">
+        return_code = #{returnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnMsg != null">
+        return_msg = #{returnMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="resultCode != null">
+        result_code = #{resultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errCode != null">
+        err_code = #{errCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errCodeDes != null">
+        err_code_des = #{errCodeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null">
+        trade_time = #{tradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null">
+        appid = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null">
+        mch_id = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceInfo != null">
+        device_info = #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="outTradeNo != null">
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeMethod != null">
+        trade_method = #{tradeMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null">
+        trade_type = #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankType != null">
+        bank_type = #{bankType,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        fee_type = #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null">
+        total_fee = #{totalFee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponFee != null">
+        coupon_fee = #{couponFee,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null">
+        refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="passRefundNo != null">
+        pass_refund_no = #{passRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outRefundNo != null">
+        out_refund_no = #{outRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="recall != null">
+        recall = #{recall,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFee != null">
+        refund_fee = #{refundFee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponRefundFee != null">
+        coupon_refund_fee = #{couponRefundFee,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCharge != null">
+        service_charge = #{serviceCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null">
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null">
+        store_name = #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null">
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null">
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null">
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null">
+        extend4 = #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.snxy.pay.domain.TradeResult">
+    update trade_result
+    set business_type_id = #{businessTypeId,jdbcType=BIGINT},
+      business_type_desc = #{businessTypeDesc,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=INTEGER},
+      wx_appid = #{wxAppid,jdbcType=VARCHAR},
+      return_code = #{returnCode,jdbcType=VARCHAR},
+      return_msg = #{returnMsg,jdbcType=VARCHAR},
+      result_code = #{resultCode,jdbcType=VARCHAR},
+      err_code = #{errCode,jdbcType=VARCHAR},
+      err_code_des = #{errCodeDes,jdbcType=VARCHAR},
+      trade_time = #{tradeTime,jdbcType=VARCHAR},
+      appid = #{appid,jdbcType=VARCHAR},
+      mch_id = #{mchId,jdbcType=VARCHAR},
+      device_info = #{deviceInfo,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR},
+      trade_method = #{tradeMethod,jdbcType=VARCHAR},
+      trade_type = #{tradeType,jdbcType=VARCHAR},
+      bank_type = #{bankType,jdbcType=VARCHAR},
+      fee_type = #{feeType,jdbcType=VARCHAR},
+      total_fee = #{totalFee,jdbcType=VARCHAR},
+      coupon_fee = #{couponFee,jdbcType=VARCHAR},
+      refund_id = #{refundId,jdbcType=VARCHAR},
+      pass_refund_no = #{passRefundNo,jdbcType=VARCHAR},
+      out_refund_no = #{outRefundNo,jdbcType=VARCHAR},
+      recall = #{recall,jdbcType=VARCHAR},
+      refund_fee = #{refundFee,jdbcType=VARCHAR},
+      coupon_refund_fee = #{couponRefundFee,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      service_charge = #{serviceCharge,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR},
+      store_id = #{storeId,jdbcType=VARCHAR},
+      store_name = #{storeName,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      extend1 = #{extend1,jdbcType=VARCHAR},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      extend4 = #{extend4,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByOutTradeNoAndOutFundNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from trade_result
+    where out_trade_no = #{outTradeNo}
+      and out_refund_no = #{outFundNo}
+      and is_delete = #{isDelete}
+  </select>
+
+  <select id="selectByOutTradeNoAndBusinessType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from trade_result
+    where out_trade_no = #{outTradeNo}
+    and business_type_id = #{businessTypeId}
+    and is_delete = #{isDelete}
+  </select>
+
+
+</mapper>

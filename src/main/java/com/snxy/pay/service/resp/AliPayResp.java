@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Created by 24398 on 2018/11/16.
  */
@@ -35,6 +37,18 @@ public class AliPayResp {
     private String time_end;
     private String buyer_logon_id;
     private String fund_bill_list;
+    private List<InnerFundBill> fund_bills;
+
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InnerFundBill{
+        private String amount;
+        private String fund_channel;
+        private String realAmount;
+    }
 
    // public static
 

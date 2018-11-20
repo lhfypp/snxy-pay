@@ -9,27 +9,27 @@ public class WXMethodNameConst {
     /**
      * 微信反扫（刷卡）支付方法名
      */
-    public static final String WX_MICROPAY = "mbupay.decorator.micropay";
+    public static final String WX_MICROPAY = "mbupay.wxpay.micropay";
     /**
      * 微信查询订单方法
      */
-    public static final String WX_QUERY = "mbupay.decorator.query";
+    public static final String WX_QUERY = "mbupay.wxpay.query";
 
     /**
      * 微信申请退款接口
      */
-    public static final String WX_REFUND = "mbupay.decorator.refund";
+    public static final String WX_REFUND = "mbupay.wxpay.refund";
     /**
      * 微信查询退款接口
      */
-    public static final String WX_REFUNDQUERY = "mbupay.decorator.refundquery";
+    public static final String WX_REFUNDQUERY = "mbupay.wxpay.refundquery";
     /**
      * 微信撤销订单接口
      */
-    public static final String WX_REVERSE = "mbupay.decorator.reverse";
+    public static final String WX_REVERSE = "mbupay.wxpay.reverse";
 
     /**
      * 微信对账单接口
      */
-    public static final String WX_BILL = "mbupay.decorator.bill";
+    public static final String WX_BILL = "mbupay.wxpay.bill";
 }
