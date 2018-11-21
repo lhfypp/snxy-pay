@@ -231,11 +231,10 @@ public class AliMicropayDecorator {
                 tradeResult.setCouponFee(aliPayQueryResp.getCoupon_fee());
                 tradeResult.setTransactionId(aliPayQueryResp.getTransaction_id());
                 tradeResult.setGmtModified(new Date());
-            }else{
-                tradeResult.setResultCode("FAIL");
+
+                this.tradeResultService.updateSelective(tradeResult);
             }
             // 修改记录结果
-            this.tradeResultService.updateSelective(tradeResult);
             ///TODO 更新业务订单状态, 非必要继续查询状态或者超时了
          //   refreshOrderState(null);
         });

@@ -26,6 +26,9 @@ public class WxRefundResp {
     private String err_code;
     private String err_code_des;
 
+
+    private String transaction_id;
+    private String refund_id;
     private String refund_channel;//  ORIGINAL—原路退款 ; BALANCE—退回到余额
     private String refund_fee; // 退款金额
     private String out_trade_no;

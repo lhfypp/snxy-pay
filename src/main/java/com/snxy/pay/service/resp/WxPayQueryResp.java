@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WxPayQueryResp {
 
-    private String charset;
     private String version;
+    private String charset;
     private String sign_type;
     private String return_code;
     private String return_msg;
@@ -29,6 +29,15 @@ public class WxPayQueryResp {
     private String err_code_des;
 
 
+
     private String trade_state;
     private String trade_state_desc;
+    private String openid;
+    private String is_subscribe;
+    private String trade_type;
+    private String bank_type;
+    private String total_fee;
+    private String transaction_id;
+    private String time_end;
+    private String out_trade_no;
 }

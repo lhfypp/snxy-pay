@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class WxPayResp{
 
-   private String charset;
    private String version;
+   private String charset;
    private String sign_type;
    private String return_code;
    private String return_msg;
@@ -27,6 +27,8 @@ public class WxPayResp{
    private String err_code;
    private String err_code_des;
 
+   private String openid;
+   private String is_subscribe;
    private String bank_type;  // 付款银行
    private Integer total_fee; // 单位分
    private String transaction_id; // 微信订单号

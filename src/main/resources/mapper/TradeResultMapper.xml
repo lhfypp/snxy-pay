@@ -569,5 +569,17 @@
     and is_delete = #{isDelete}
   </select>
 
+  <select id="selectPayResult" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from trade_result
+    where out_trade_no = #{outTradeNo}
+    and business_type_id in
+    <foreach collection="list" item="businessTypeId" open="(" close=")" separator="," >
+       #{businessTypeId}
+    </foreach>
+    and is_delete = #{isDelete}
+  </select>
+
 
 </mapper>
